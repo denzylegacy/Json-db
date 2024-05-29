@@ -65,16 +65,15 @@ class JsonDB:
             self,
             collection: str,
             doc: str,
-            attributes: List[Dict[str, Any]]
+            attributes: Dict[str, Any]
     ) -> None:
         data = self._read_db()
         docs = data.get(collection, {})
+
         if doc in docs:
-            for attribute in attributes:
-                for key in attribute:
-                    docs[doc][key] = attribute[key]
-                    self._write_to_db(data)
-                    print(f"'{doc}' '{key}' has been updated to '{attribute[key]}'.")
+            docs[doc] |= attributes
+            self._write_to_db(data)
+            print(f"'{doc}' has been updated.")
         else:
             print(f"'{doc}' not found.")
 
